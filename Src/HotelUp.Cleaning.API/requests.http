@@ -1,0 +1,6 @@
+﻿@url = http://localhost:5004/api/cleaning
+### GET request to example server
+
+GET {{url}}/_health
+
+###
