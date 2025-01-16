@@ -9,7 +9,7 @@ internal static class Extensions
 {
     public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
-        services.ConfigurePostgres(configuration);
+        services.ConfigurePostgres();
         services.AddPostgres<AppDbContext>();
         services.AddHostedService<DatabaseInitializer>();
         services.AddHealthChecks()
