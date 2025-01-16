@@ -11,7 +11,7 @@ builder.Services.AddCustomSwagger(builder.Configuration);
 builder.Services.AddCorsForFrontend(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddServiceLayer(builder.Configuration);
-builder.Services.AddPersistenceLayer(builder.Configuration);
+builder.Services.AddPersistenceLayer();
 
 var app = builder.Build();
 

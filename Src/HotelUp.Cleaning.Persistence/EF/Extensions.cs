@@ -7,7 +7,7 @@ namespace HotelUp.Cleaning.Persistence.EF;
 
 internal static class Extensions
 {
-    public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddDatabase(this IServiceCollection services)
     {
         services.ConfigurePostgres();
         services.AddPostgres<AppDbContext>();
