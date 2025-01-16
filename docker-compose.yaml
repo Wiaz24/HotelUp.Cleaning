@@ -10,6 +10,11 @@ services:
             POSTGRES_DB: testdb
         ports:
             - "5432:5432"
+        command:
+            - "-c"
+            - "track_commit_timestamp=true"
+        volumes:
+            - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     rabbitmq:
         image: rabbitmq:management
         environment:
