@@ -10,7 +10,7 @@ public class CleaningTask
     public Guid ReservationId { get; init; }
     public DateTime RealisationDate { get; init; }
     public int RoomNumber { get; init; }
-    public TaskStatus Status { get; init; } = TaskStatus.Pending;
+    public TaskStatus Status { get; set; } = TaskStatus.Pending;
     public CleaningType CleaningType { get; init; }
     public required Cleaner Cleaner { get; init; }
 }

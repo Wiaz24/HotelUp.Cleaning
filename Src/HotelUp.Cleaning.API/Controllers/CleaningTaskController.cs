@@ -15,6 +15,8 @@ namespace HotelUp.Cleaning.API.Controllers;
 [ProducesErrorResponseType(typeof(ErrorResponse))]
 public class CleaningTaskController : ControllerBase
 {
+    private Guid LoggedInUserId => User.FindFirstValue(ClaimTypes.NameIdentifier) 
+        is { } id ? new Guid(id) : throw new TokenException("No user id found in access token.");
     private readonly ICleaningTaskService _cleaningTaskService;
 
     public CleaningTaskController(ICleaningTaskService cleaningTaskService)
@@ -22,7 +24,7 @@ public class CleaningTaskController : ControllerBase
         _cleaningTaskService = cleaningTaskService;
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:guid}")]
     [SwaggerOperation("Get task by id")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -33,6 +35,17 @@ public class CleaningTaskController : ControllerBase
         {
             return NotFound();
         }
+        return Ok(result);
+    }
+    
+    [Authorize]
+    [HttpGet]
+    [SwaggerOperation("Get all cleaning tasks for logged in cleaner")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<IEnumerable<CleaningTask>>> GetAll()
+    {
+        var result = await _cleaningTaskService.GetTasksByCleanerIdAsync(LoggedInUserId);
         return Ok(result);
     }
 
@@ -50,4 +63,18 @@ public class CleaningTaskController : ControllerBase
             dto.RoomNumber);
         return CreatedAtAction(nameof(GetById), new { id = result}, result);
     }
+    
+    [Authorize]
+    [HttpPut("{id:guid}")]
+    [SwaggerOperation("Update cleaning task status as a cleaner")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateTaskStatus([FromRoute] Guid id, [FromQuery] UpdateCleaningTaskStatusDto dto)
+    {
+        await _cleaningTaskService.UpdateStatusAsync(id, LoggedInUserId, dto.Status);
+        return Ok();
+    }
+    
 }
