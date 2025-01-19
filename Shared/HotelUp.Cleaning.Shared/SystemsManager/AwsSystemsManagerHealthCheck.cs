@@ -18,13 +18,12 @@ public class AwsSystemsManagerHealthCheck : IHealthCheck
     {
         try
         {
-            var response = await _ssmClient.GetDocumentAsync(new GetDocumentRequest()
+            var response = await _ssmClient.GetParameterAsync(new GetParameterRequest()
             {
-                Name = "AWS-ASGEnterStandby",
-                DocumentVersion = "1"
+                Name = "/HotelUp.Cleaning/Development/Postgres/ConnectionString"
             }, cancellationToken);
 
-            if (response?.Content != null)
+            if (response?.Parameter != null)
             {
                 return HealthCheckResult.Healthy();
             }

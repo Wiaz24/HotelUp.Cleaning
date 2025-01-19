@@ -14,6 +14,7 @@ public static class Extensions
 {
     public static WebApplicationBuilder AddShared(this WebApplicationBuilder builder)
     {
+        builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
         builder.Services.AddHealthChecks();
         builder.Services.AddAuth(builder.Configuration);
         builder.Services.AddHttpClient();

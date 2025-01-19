@@ -1,6 +1,5 @@
 ﻿using HotelUp.Cleaning.Persistence.EF;
 using HotelUp.Cleaning.Persistence.Repositories;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HotelUp.Cleaning.Persistence;

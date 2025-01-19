@@ -19,6 +19,9 @@ internal sealed class DbContextConfiguration
     {
         builder.HasKey(x => x.Id);
         
+        builder.HasIndex(x => x.ReservationId)
+            .IsUnique();
+        
         builder.Property(x => x.ReservationId)
             .IsRequired();
         

@@ -15,6 +15,8 @@ internal static class Extensions
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options =>
         {
+            options.EnableAnnotations();
+            options.UseInlineDefinitionsForEnums();
             options.SwaggerDoc("v1", new OpenApiInfo { Title = "HotelUp.Cleaning", Version = "v1" });
             options.AddSecurityDefinition("oidc", new OpenApiSecurityScheme
             {
