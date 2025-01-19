@@ -10,8 +10,8 @@ builder.AddShared();
 builder.Services.AddCustomSwagger(builder.Configuration);
 builder.Services.AddCorsForFrontend(builder.Configuration);
 builder.Services.AddControllers();
-builder.Services.AddServiceLayer(builder.Configuration);
 builder.Services.AddPersistenceLayer();
+builder.Services.AddServiceLayer();
 
 var app = builder.Build();
 

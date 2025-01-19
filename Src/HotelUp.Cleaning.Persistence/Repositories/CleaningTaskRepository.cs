@@ -16,7 +16,7 @@ public class CleaningTaskRepository : ICleaningTaskRepository
         _dbContext = dbContext;
     }
 
-    public async Task<CleaningTask?> GetAsync(Guid id)
+    public async Task<CleaningTask?> GetByIdAsync(Guid id)
     {
         var cacheKey = $"CleaningTask_{id}";
         var cachedResult = _memoryCache.Get<CleaningTask>(cacheKey);
@@ -63,5 +63,12 @@ public class CleaningTaskRepository : ICleaningTaskRepository
     {
         _dbContext.CleaningTasks.Remove(task);
         await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<bool> ReservationExistsAsync(Guid reservationId)
+    {
+        return await _dbContext.CleaningTasks
+            .AsNoTracking()
+            .AnyAsync(x => x.ReservationId == reservationId);
     }
 }

@@ -29,10 +29,4 @@
         <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <Content Include="..\..\docker-compose.yaml">
-            <Link>docker-compose.yaml</Link>
-        </Content>
-    </ItemGroup>
-
 </Project>
