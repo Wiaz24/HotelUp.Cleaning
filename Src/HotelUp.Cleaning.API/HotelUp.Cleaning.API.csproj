@@ -26,4 +26,10 @@
         <ProjectReference Include="..\HotelUp.Cleaning.Services\HotelUp.Cleaning.Services.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
 </Project>
