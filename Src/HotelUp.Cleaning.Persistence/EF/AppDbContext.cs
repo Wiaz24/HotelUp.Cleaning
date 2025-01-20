@@ -14,6 +14,7 @@ public class AppDbContext : DbContext
     
     public DbSet<CleaningTask> CleaningTasks { get; set; }
     public DbSet<Cleaner> Cleaners { get; set; }
+    public DbSet<Reservation> Reservations { get; set; }
     public AppDbContext(DbContextOptions<AppDbContext> options, IOptions<PostgresOptions> postgresOptions)
         : base(options)
     {
@@ -29,6 +30,7 @@ public class AppDbContext : DbContext
         var configuration = new DbContextConfiguration();
         modelBuilder.ApplyConfiguration<Cleaner>(configuration);
         modelBuilder.ApplyConfiguration<CleaningTask>(configuration);
+        modelBuilder.ApplyConfiguration<Reservation>(configuration);
 
         base.OnModelCreating(modelBuilder);
     }

@@ -9,6 +9,7 @@ public static class Extensions
         services.AddMemoryCache();
         services.AddScoped<ICleanerRepository, CleanerRepository>();
         services.AddScoped<ICleaningTaskRepository, CleaningTaskRepository>();
+        services.AddScoped<IReservationRepository, ReservationRepository>();
         return services;
     }
 }

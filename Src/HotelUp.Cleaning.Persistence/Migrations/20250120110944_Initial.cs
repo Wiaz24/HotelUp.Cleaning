@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using HotelUp.Cleaning.Persistence.Const;
 using Microsoft.EntityFrameworkCore.Migrations;
 using TaskStatus = HotelUp.Cleaning.Persistence.Const.TaskStatus;
@@ -33,6 +34,21 @@ namespace HotelUp.Cleaning.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Reservations",
+                schema: "cleaning",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    RoomNumbers = table.Column<List<int>>(type: "integer[]", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reservations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CleaningTasks",
                 schema: "cleaning",
                 columns: table => new
@@ -43,7 +59,7 @@ namespace HotelUp.Cleaning.Persistence.Migrations
                     RoomNumber = table.Column<int>(type: "integer", nullable: false),
                     Status = table.Column<TaskStatus>(type: "cleaning.task_status", nullable: false),
                     CleaningType = table.Column<CleaningType>(type: "cleaning.cleaning_type", nullable: false),
-                    CleanerId = table.Column<Guid>(type: "uuid", nullable: false)
+                    CleanerId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -53,6 +69,12 @@ namespace HotelUp.Cleaning.Persistence.Migrations
                         column: x => x.CleanerId,
                         principalSchema: "cleaning",
                         principalTable: "Cleaners",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CleaningTasks_Reservations_ReservationId",
+                        column: x => x.ReservationId,
+                        principalSchema: "cleaning",
+                        principalTable: "Reservations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -62,6 +84,12 @@ namespace HotelUp.Cleaning.Persistence.Migrations
                 schema: "cleaning",
                 table: "CleaningTasks",
                 column: "CleanerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CleaningTasks_ReservationId",
+                schema: "cleaning",
+                table: "CleaningTasks",
+                column: "ReservationId");
         }
 
         /// <inheritdoc />
@@ -73,6 +101,10 @@ namespace HotelUp.Cleaning.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Cleaners",
+                schema: "cleaning");
+
+            migrationBuilder.DropTable(
+                name: "Reservations",
                 schema: "cleaning");
         }
     }

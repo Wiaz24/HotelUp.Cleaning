@@ -18,8 +18,13 @@ public class CleanerService : ICleanerService
         return _cleanerRepository.GetAsync(id);
     }
 
-    public Task CreateAsync(Cleaner cleaner)
+    public Task CreateAsync(Guid id)
     {
+        var cleaner = new Cleaner
+        {
+            Id = id,
+            CleaningTasks = []
+        };
         return _cleanerRepository.AddAsync(cleaner);
     }
 }

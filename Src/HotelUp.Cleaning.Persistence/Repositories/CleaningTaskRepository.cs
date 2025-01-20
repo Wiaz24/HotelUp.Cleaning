@@ -53,6 +53,12 @@ public class CleaningTaskRepository : ICleaningTaskRepository
         await _dbContext.SaveChangesAsync();
     }
 
+    public Task AddRangeAsync(IEnumerable<CleaningTask> tasks)
+    {
+        _dbContext.CleaningTasks.AddRange(tasks);
+        return _dbContext.SaveChangesAsync();
+    }
+
     public async Task UpdateAsync(CleaningTask task)
     {
         _dbContext.CleaningTasks.Update(task);
@@ -63,12 +69,5 @@ public class CleaningTaskRepository : ICleaningTaskRepository
     {
         _dbContext.CleaningTasks.Remove(task);
         await _dbContext.SaveChangesAsync();
-    }
-
-    public async Task<bool> ReservationExistsAsync(Guid reservationId)
-    {
-        return await _dbContext.CleaningTasks
-            .AsNoTracking()
-            .AnyAsync(x => x.ReservationId == reservationId);
     }
 }
