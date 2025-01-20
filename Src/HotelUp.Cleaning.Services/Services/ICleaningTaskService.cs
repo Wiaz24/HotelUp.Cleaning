@@ -13,4 +13,5 @@ public interface ICleaningTaskService
     Task<Guid> CreateOnDemandAsync(Guid reservationId, DateTime realisationDate, int roomNumber);
     Task UpdateStatusAsync(Guid cleaningTaskId, Guid cleanerId, TaskStatus status);
     Task CreateCleaningTasksForReservation(ReservationCreatedEvent reservation);
+    Task RemoveCleaningTasksForReservation(ReservationCanceledEvent reservation);
 }

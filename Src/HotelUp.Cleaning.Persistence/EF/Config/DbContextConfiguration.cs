@@ -19,9 +19,10 @@ internal sealed class DbContextConfiguration
     public void Configure(EntityTypeBuilder<CleaningTask> builder)
     {
         builder.HasKey(x => x.Id);
-        
+
         builder.HasOne(x => x.Reservation)
-            .WithMany();
+            .WithMany()
+            .HasForeignKey(x => x.ReservationId);
         
         builder.Property(x => x.RealisationDate)
             .IsRequired()

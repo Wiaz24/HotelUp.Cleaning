@@ -2,7 +2,6 @@
 using HotelUp.Cleaning.Persistence.Entities;
 using HotelUp.Cleaning.Persistence.Repositories;
 using HotelUp.Cleaning.Services.Events;
-using HotelUp.Cleaning.Services.Events.External;
 using HotelUp.Cleaning.Services.Events.External.DTOs;
 using HotelUp.Cleaning.Services.Services.Exceptions;
 using HotelUp.Cleaning.Shared.Exceptions;
@@ -136,7 +135,18 @@ public class CleaningTaskService : ICleaningTaskService
         var assignedTasks = AssignTasksToCleaners(cleaningTasks, cleanersWithTaskCount.ToList());
         await _cleaningTaskRepository.AddRangeAsync(assignedTasks);
     }
-    
+
+    public async Task RemoveCleaningTasksForReservation(ReservationCanceledEvent reservationCanceledEvent)
+    {
+        var reservation = await _reservationRepository.GetByIdAsync(reservationCanceledEvent.ReservationId);
+        if (reservation is null)
+        {
+            throw new ReservationNotFoundException(reservationCanceledEvent.ReservationId);
+        }
+        var tasks = await _cleaningTaskRepository.GetByReservationIdAsync(reservationCanceledEvent.ReservationId);
+
+    }
+
     public static IEnumerable<CleaningTask> AssignTasksToCleaners(List<CleaningTask> cleaningTasks, 
         List<CleanerWithTaskCountDto> cleanersWithTaskCount)
     {
@@ -153,6 +163,11 @@ public class CleaningTaskService : ICleaningTaskService
     
     private Task<List<CleaningTask>> CreateCleaningTasksForBasicRoom(int roomNumber, Reservation reservation)
     {
+        var defaultCleaner = new Cleaner
+        {
+            Id = Guid.NewGuid(),
+            CleaningTasks = new List<CleaningTask>()
+        };
         var cleaningTasks = new List<CleaningTask>();
         var startDate = reservation.StartDate;
         var endDate = reservation.EndDate;
@@ -166,7 +181,8 @@ public class CleaningTaskService : ICleaningTaskService
                 RealisationDate = date,
                 RoomNumber = roomNumber,
                 Status = TaskStatus.Pending,
-                CleaningType = CleaningType.Cyclic 
+                CleaningType = CleaningType.Cyclic,
+                Cleaner = defaultCleaner
             };
             cleaningTasks.Add(task);
         }
@@ -180,7 +196,8 @@ public class CleaningTaskService : ICleaningTaskService
                 RealisationDate = endDate,
                 RoomNumber = roomNumber,
                 Status = TaskStatus.Pending,
-                CleaningType = CleaningType.Cyclic
+                CleaningType = CleaningType.Cyclic,
+                Cleaner = defaultCleaner
             });
         }
         return Task.FromResult(cleaningTasks);
@@ -188,6 +205,11 @@ public class CleaningTaskService : ICleaningTaskService
 
     private Task<List<CleaningTask>> CreateCleaningTasksForEconomyRoom(int roomNumber, Reservation reservation)
     {
+        var defaultCleaner = new Cleaner
+        {
+            Id = Guid.NewGuid(),
+            CleaningTasks = new List<CleaningTask>()
+        };
         var startDate = reservation.StartDate;
         var endDate = reservation.EndDate;
 
@@ -200,7 +222,8 @@ public class CleaningTaskService : ICleaningTaskService
                 RealisationDate = startDate,
                 RoomNumber = roomNumber,
                 Status = TaskStatus.Pending,
-                CleaningType = CleaningType.Cyclic
+                CleaningType = CleaningType.Cyclic,
+                Cleaner = defaultCleaner
             },
             new CleaningTask
             {
@@ -209,7 +232,8 @@ public class CleaningTaskService : ICleaningTaskService
                 RealisationDate = endDate,
                 RoomNumber = roomNumber,
                 Status = TaskStatus.Pending,
-                CleaningType = CleaningType.Cyclic
+                CleaningType = CleaningType.Cyclic,
+                Cleaner = defaultCleaner
             }
         };
         return Task.FromResult(cleaningTasks);
@@ -217,6 +241,11 @@ public class CleaningTaskService : ICleaningTaskService
 
     private Task<List<CleaningTask>> CreateCleaningTasksForPremiumRoom(int roomNumber, Reservation reservation)
     {
+        var defaultCleaner = new Cleaner
+        {
+            Id = Guid.NewGuid(),
+            CleaningTasks = new List<CleaningTask>()
+        };
         var cleaningTasks = new List<CleaningTask>();
         var startDate = reservation.StartDate;
         var endDate = reservation.EndDate;
@@ -230,7 +259,8 @@ public class CleaningTaskService : ICleaningTaskService
                 RealisationDate = date,
                 RoomNumber = roomNumber,
                 Status = TaskStatus.Pending,
-                CleaningType = CleaningType.Cyclic
+                CleaningType = CleaningType.Cyclic,
+                Cleaner = defaultCleaner
             };
             cleaningTasks.Add(task);
         }

@@ -47,6 +47,13 @@ public class CleaningTaskRepository : ICleaningTaskRepository
         return result;
     }
 
+    public Task<List<CleaningTask>> GetByReservationIdAsync(Guid id)
+    {
+        return _dbContext.CleaningTasks
+            .Where(x => x.ReservationId == id)
+            .ToListAsync();
+    }
+
     public async Task AddAsync(CleaningTask task)
     {
         await _dbContext.CleaningTasks.AddAsync(task);

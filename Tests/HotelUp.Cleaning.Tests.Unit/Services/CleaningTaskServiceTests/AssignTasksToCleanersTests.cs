@@ -10,6 +10,11 @@ namespace HotelUp.Cleaning.Tests.Unit.Services.CleaningTaskServiceTests;
 public class AssignTasksToCleanersTests
 {
     private static readonly DateTime BaseDate = new(2025, 1, 1);
+    private static readonly Cleaner DefaultCleaner = new()
+    {
+        Id = Guid.NewGuid(),
+        CleaningTasks = []
+    };
 
     [Fact]
     public void AssignTasksToCleaners_WhenSingleTaskAndSingleCleaner_AssignsTaskToThatCleaner()
@@ -42,7 +47,8 @@ public class AssignTasksToCleanersTests
                 Reservation = reservation,
                 RealisationDate = BaseDate,
                 RoomNumber = 101,
-                CleaningType = CleaningType.Cyclic
+                CleaningType = CleaningType.Cyclic,
+                Cleaner = DefaultCleaner
             }
         };
 
@@ -93,7 +99,8 @@ public class AssignTasksToCleanersTests
                 Reservation = reservation,
                 RealisationDate = BaseDate,
                 RoomNumber = 101,
-                CleaningType = CleaningType.Cyclic
+                CleaningType = CleaningType.Cyclic,
+                Cleaner = DefaultCleaner
             },
             new()
             {
@@ -101,7 +108,8 @@ public class AssignTasksToCleanersTests
                 Reservation = reservation,
                 RealisationDate = BaseDate,
                 RoomNumber = 102,
-                CleaningType = CleaningType.Cyclic
+                CleaningType = CleaningType.Cyclic,
+                Cleaner = DefaultCleaner
             }
         };
 
@@ -153,7 +161,8 @@ public class AssignTasksToCleanersTests
                 Reservation = reservation,
                 RealisationDate = BaseDate,
                 RoomNumber = 101,
-                CleaningType = CleaningType.OnDemand
+                CleaningType = CleaningType.OnDemand,
+                Cleaner = DefaultCleaner
             }
         };
 
@@ -184,7 +193,8 @@ public class AssignTasksToCleanersTests
                 Reservation = reservation,
                 RealisationDate = BaseDate,
                 RoomNumber = 101,
-                CleaningType = CleaningType.OnDemand
+                CleaningType = CleaningType.OnDemand,
+                Cleaner = DefaultCleaner
             }
         };
 
