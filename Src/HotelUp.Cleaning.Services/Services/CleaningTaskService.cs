@@ -7,6 +7,7 @@ using HotelUp.Cleaning.Services.Events.External.DTOs;
 using HotelUp.Cleaning.Services.Services.Exceptions;
 using HotelUp.Cleaning.Shared.Exceptions;
 using HotelUp.Customer.Application.Events;
+using MassTransit;
 using TaskStatus = HotelUp.Cleaning.Persistence.Const.TaskStatus;
 
 namespace HotelUp.Cleaning.Services.Services;
@@ -16,13 +17,15 @@ public class CleaningTaskService : ICleaningTaskService
     private readonly ICleaningTaskRepository _cleaningTaskRepository;
     private readonly ICleanerRepository _cleanerRepository;
     private readonly IReservationRepository _reservationRepository;
+    private readonly IPublishEndpoint _bus;
 
     public CleaningTaskService(ICleaningTaskRepository cleaningTaskRepository, 
-        ICleanerRepository cleanerRepository, IReservationRepository reservationRepository)
+        ICleanerRepository cleanerRepository, IReservationRepository reservationRepository, IPublishEndpoint bus)
     {
         _cleaningTaskRepository = cleaningTaskRepository;
         _cleanerRepository = cleanerRepository;
         _reservationRepository = reservationRepository;
+        _bus = bus;
     }
 
     public async Task<CleaningTask?> GetTaskByIdAsync(Guid id)
@@ -66,7 +69,12 @@ public class CleaningTaskService : ICleaningTaskService
         };
         
         await _cleaningTaskRepository.AddAsync(task);
-        //Todo: Publish event
+        var taskEvent = new OnDemandCleaningTaskCreatedEvent
+        {
+            TaskId = task.Id,
+            ReservationId = task.Reservation.Id
+        };
+        await _bus.Publish(taskEvent);
         return task.Id;
     }
 
@@ -76,6 +84,10 @@ public class CleaningTaskService : ICleaningTaskService
         if (cleaningTask is null)
         {
             throw new CleaningTaskNotFoundException(cleaningTaskId);
+        }
+        if (cleaningTask.Cleaner is null)
+        {
+            throw new CleanerNotAssignedToTaskException(cleaningTaskId);
         }
         if (cleaningTask.Cleaner.Id != cleanerId)
         {

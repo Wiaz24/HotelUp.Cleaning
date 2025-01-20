@@ -15,11 +15,11 @@ public static class Extensions
     public static WebApplicationBuilder AddShared(this WebApplicationBuilder builder)
     {
         builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
+        builder.AddCustomSystemsManagers();
         builder.Services.AddHealthChecks();
         builder.Services.AddAuth(builder.Configuration);
         builder.Services.AddHttpClient();
         builder.Services.AddMessaging();
-        builder.AddCustomSystemsManagers();
         builder.Services.AddTransient<ExceptionMiddleware>();
         builder.AddCustomLogging();
         return builder;

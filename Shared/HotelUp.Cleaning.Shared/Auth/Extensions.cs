@@ -18,11 +18,14 @@ internal static class Extensions
             .ValidateOnStart();
 
         var oidcOptions = configuration.GetSection(OidcSectionName).Get<OidcOptions>()
-                          ?? throw new NullReferenceException("OIDC options are missing in appsettings.json");
+            ?? throw new NullReferenceException("OIDC options are missing in appsettings.json");
 
         services.AddHealthChecks()
             .AddCheck<OidcProviderHealthCheck>("oidc_provider");
-        services.AddAuthentication(options => { options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; })
+        services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
                 options.MetadataAddress = oidcOptions.MetadataAddress;
@@ -32,10 +35,21 @@ internal static class Extensions
                     ValidateIssuer = oidcOptions.ValidateIssuer,
                     ValidateAudience = oidcOptions.ValidateAudience,
                     ValidateLifetime = oidcOptions.ValidateLifetime,
-                    ValidateIssuerSigningKey = oidcOptions.ValidateIssuerSigningKey
+                    ValidateIssuerSigningKey = oidcOptions.ValidateIssuerSigningKey,
+                    RoleClaimType = oidcOptions.RoleClaimType
                 };
             });
-        services.AddAuthorization();
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy(PoliciesNames.IsAdmin, policy => 
+                policy.RequireRole("Admins"));
+            options.AddPolicy(PoliciesNames.IsReceptionist, policy =>
+                policy.RequireRole("Receptionists"));
+            options.AddPolicy(PoliciesNames.IsCleaner, policy =>
+                policy.RequireRole("Cleaners"));
+            options.AddPolicy(PoliciesNames.CanManageCleaningTasks, policy =>
+                policy.RequireRole("Admins", "Cleaners"));
+        });
         return services;
     }
 
