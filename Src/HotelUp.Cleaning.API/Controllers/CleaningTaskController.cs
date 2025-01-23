@@ -56,7 +56,7 @@ public class CleaningTaskController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> CreateTask([FromBody] CreateCleaningTaskDto dto)
+    public async Task<IActionResult> CreateCleaningTaskOnDemand([FromBody] CreateCleaningTaskDto dto)
     {
         var result = await _cleaningTaskService.CreateOnDemandAsync(
             dto.ReservationId, 

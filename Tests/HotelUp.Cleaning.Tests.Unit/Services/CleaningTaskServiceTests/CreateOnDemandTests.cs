@@ -37,7 +37,7 @@ public class CreateOnDemandTests
         var service = new Cleaning.Services.Services.CleaningTaskService(cleaningTaskRepository, 
             cleanerRepository, reservationRepository, _bus);
         var reservationId = Guid.NewGuid();
-        var realisationDate = today.AddDays(1);
+        var realisationDate = DateOnly.FromDateTime(today.AddDays(1));
         var roomNumber = 1;
 
         // Act
@@ -73,7 +73,7 @@ public class CreateOnDemandTests
         var service = new Cleaning.Services.Services.CleaningTaskService(cleaningTaskRepository, 
             cleanerRepository, reservationRepository, _bus);
         var reservationId = Guid.NewGuid();
-        var realisationDate = today.AddDays(3);
+        var realisationDate = DateOnly.FromDateTime(today.AddDays(3));
         var roomNumber = 1;
 
         // Act
@@ -105,7 +105,7 @@ public class CreateOnDemandTests
         var service = new Cleaning.Services.Services.CleaningTaskService(cleaningTaskRepository, 
             cleanerRepository, reservationRepository, _bus);
         var reservationId = Guid.NewGuid();
-        var realisationDate = today.AddDays(1);
+        var realisationDate = DateOnly.FromDateTime(today.AddDays(1));
         var roomNumber = 1;
 
         // Act
@@ -138,7 +138,7 @@ public class CreateOnDemandTests
         var service = new Cleaning.Services.Services.CleaningTaskService(cleaningTaskRepository, 
             cleanerRepository, reservationRepository, _bus);
         var reservationId = Guid.NewGuid();
-        var realisationDate = today.AddDays(1);
+        var realisationDate = DateOnly.FromDateTime(today.AddDays(1));
         var roomNumber = 1;
 
         // Act
