@@ -15,6 +15,7 @@ public class ReservationCanceledEventHandler : IConsumer<ReservationCanceledEven
 
     public Task Consume(ConsumeContext<ReservationCanceledEvent> context)
     {
-        throw new NotImplementedException();
+        var reservationCanceledEvent = context.Message;
+        return _cleaningTaskService.RemoveCleaningTasksForReservation(reservationCanceledEvent);
     }
 }

@@ -11,4 +11,5 @@ public interface ICleaningTaskRepository
     Task AddRangeAsync(IEnumerable<CleaningTask> tasks);
     Task UpdateAsync(CleaningTask task);
     Task DeleteAsync(CleaningTask task);
+    Task DeleteRangeAsync(IEnumerable<CleaningTask> tasks);
 }

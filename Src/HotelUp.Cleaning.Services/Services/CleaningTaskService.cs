@@ -144,7 +144,8 @@ public class CleaningTaskService : ICleaningTaskService
             throw new ReservationNotFoundException(reservationCanceledEvent.ReservationId);
         }
         var tasks = await _cleaningTaskRepository.GetByReservationIdAsync(reservationCanceledEvent.ReservationId);
-
+        await _cleaningTaskRepository.DeleteRangeAsync(tasks);
+        await _reservationRepository.DeleteAsync(reservation);
     }
 
     public static IEnumerable<CleaningTask> AssignTasksToCleaners(List<CleaningTask> cleaningTasks, 

@@ -77,4 +77,10 @@ public class CleaningTaskRepository : ICleaningTaskRepository
         _dbContext.CleaningTasks.Remove(task);
         await _dbContext.SaveChangesAsync();
     }
+
+    public Task DeleteRangeAsync(IEnumerable<CleaningTask> tasks)
+    {
+        _dbContext.CleaningTasks.RemoveRange(tasks);
+        return _dbContext.SaveChangesAsync();
+    }
 }
