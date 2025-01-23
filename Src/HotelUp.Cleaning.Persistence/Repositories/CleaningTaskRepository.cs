@@ -47,10 +47,23 @@ public class CleaningTaskRepository : ICleaningTaskRepository
         return result;
     }
 
+    public Task<List<CleaningTask>> GetByReservationIdAsync(Guid id)
+    {
+        return _dbContext.CleaningTasks
+            .Where(x => x.ReservationId == id)
+            .ToListAsync();
+    }
+
     public async Task AddAsync(CleaningTask task)
     {
         await _dbContext.CleaningTasks.AddAsync(task);
         await _dbContext.SaveChangesAsync();
+    }
+
+    public Task AddRangeAsync(IEnumerable<CleaningTask> tasks)
+    {
+        _dbContext.CleaningTasks.AddRange(tasks);
+        return _dbContext.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(CleaningTask task)
@@ -65,10 +78,9 @@ public class CleaningTaskRepository : ICleaningTaskRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<bool> ReservationExistsAsync(Guid reservationId)
+    public Task DeleteRangeAsync(IEnumerable<CleaningTask> tasks)
     {
-        return await _dbContext.CleaningTasks
-            .AsNoTracking()
-            .AnyAsync(x => x.ReservationId == reservationId);
+        _dbContext.CleaningTasks.RemoveRange(tasks);
+        return _dbContext.SaveChangesAsync();
     }
 }

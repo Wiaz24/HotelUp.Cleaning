@@ -33,18 +33,29 @@ public class CleanerRepository : ICleanerRepository
 
     public async Task<Cleaner?> getOneWithLeastTasksAsync()
     {
-        return await _dbContext.CleaningTasks
-            .AsNoTracking()
-            .Include(x => x.Cleaner)
-            .GroupBy(x => x.Cleaner)
-            .Select(x => new
+        return await _dbContext.Cleaners
+            .Select(c => new
             {
-                Cleaner = x.Key,
-                TasksCount = x.Count()
+                Cleaner = c,
+                TaskCount = c.CleaningTasks.Count
             })
-            .OrderBy(x => x.TasksCount)
+            .OrderBy(c => c.TaskCount)
             .Select(x => x.Cleaner)
             .FirstOrDefaultAsync();
+    }
+
+    public async Task<IEnumerable<CleanerWithTaskCountDto>> GetCleanersOrderedByTaskCountAsync()
+    {
+        var cleanersWithTaskCounts = await _dbContext.Cleaners
+            .Select(c => new
+            {
+                Cleaner = c,
+                TaskCount = c.CleaningTasks.Count
+            })
+            .OrderBy(c => c.TaskCount)
+            .ToListAsync();
+        return cleanersWithTaskCounts
+            .Select(x => new CleanerWithTaskCountDto(x.Cleaner, x.TaskCount));
     }
 
     public async Task AddAsync(Cleaner cleaner)

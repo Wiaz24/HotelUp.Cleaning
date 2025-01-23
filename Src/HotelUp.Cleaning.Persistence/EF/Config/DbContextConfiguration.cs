@@ -6,7 +6,8 @@ namespace HotelUp.Cleaning.Persistence.EF.Config;
 
 internal sealed class DbContextConfiguration
     : IEntityTypeConfiguration<Cleaner>,
-        IEntityTypeConfiguration<CleaningTask>
+        IEntityTypeConfiguration<CleaningTask>,
+        IEntityTypeConfiguration<Reservation>
 {
     public void Configure(EntityTypeBuilder<Cleaner> builder)
     {
@@ -18,15 +19,16 @@ internal sealed class DbContextConfiguration
     public void Configure(EntityTypeBuilder<CleaningTask> builder)
     {
         builder.HasKey(x => x.Id);
-        
-        builder.HasIndex(x => x.ReservationId)
-            .IsUnique();
-        
-        builder.Property(x => x.ReservationId)
-            .IsRequired();
+
+        builder.HasOne(x => x.Reservation)
+            .WithMany()
+            .HasForeignKey(x => x.ReservationId);
         
         builder.Property(x => x.RealisationDate)
-            .IsRequired();
+            .IsRequired()
+            .HasConversion(
+                x => DateTime.SpecifyKind(x, DateTimeKind.Utc),
+                x => DateTime.SpecifyKind(x, DateTimeKind.Utc));
         
         builder.Property(x => x.RoomNumber)
             .IsRequired();
@@ -38,8 +40,30 @@ internal sealed class DbContextConfiguration
             .IsRequired();
 
         builder.HasOne(x => x.Cleaner)
-            .WithMany();
+            .WithMany(c => c.CleaningTasks);
         
         builder.ToTable($"{nameof(CleaningTask)}s");
+    }
+
+    public void Configure(EntityTypeBuilder<Reservation> builder)
+    {
+        builder.HasKey(x => x.Id);
+        
+        builder.PrimitiveCollection(x => x.RoomNumbers)
+            .IsRequired();
+        
+        builder.Property(x => x.StartDate)
+            .IsRequired()
+            .HasConversion(
+                x => DateTime.SpecifyKind(x, DateTimeKind.Utc),
+                x => DateTime.SpecifyKind(x, DateTimeKind.Utc));
+        
+        builder.Property(x => x.EndDate)
+            .IsRequired()
+            .HasConversion(
+                x => DateTime.SpecifyKind(x, DateTimeKind.Utc),
+                x => DateTime.SpecifyKind(x, DateTimeKind.Utc));
+        
+        builder.ToTable($"{nameof(Reservation)}s");
     }
 }

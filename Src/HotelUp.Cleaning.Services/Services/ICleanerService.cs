@@ -5,5 +5,5 @@ namespace HotelUp.Cleaning.Services.Services;
 public interface ICleanerService
 {
     Task<Cleaner?> GetByIdAsync(Guid id);
-    Task CreateAsync(Cleaner cleaner);
+    Task CreateAsync(Guid id);
 }
