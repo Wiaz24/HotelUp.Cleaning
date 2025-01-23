@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A82D2E0E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelUp.Cleaning.Tests.Unit", "Tests\HotelUp.Cleaning.Tests.Unit\HotelUp.Cleaning.Tests.Unit.csproj", "{58E08637-48EF-430C-BF1B-77C8F250D42E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelUp.Cleaning.Tests.Integration", "Tests\HotelUp.Cleaning.Tests.Integration\HotelUp.Cleaning.Tests.Integration.csproj", "{11118824-922E-43E0-A307-D76E8AABE822}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{58E08637-48EF-430C-BF1B-77C8F250D42E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58E08637-48EF-430C-BF1B-77C8F250D42E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58E08637-48EF-430C-BF1B-77C8F250D42E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11118824-922E-43E0-A307-D76E8AABE822}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11118824-922E-43E0-A307-D76E8AABE822}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11118824-922E-43E0-A307-D76E8AABE822}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11118824-922E-43E0-A307-D76E8AABE822}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5645387A-DAC6-44B5-925C-2189648B4EF0} = {8DBCFB19-EF7C-41DB-B3FA-E9817D64BC8D}
@@ -49,5 +55,6 @@ Global
 		{0C3422E2-D15C-4700-8A67-94AEA465E4D3} = {8DBCFB19-EF7C-41DB-B3FA-E9817D64BC8D}
 		{5146A70B-598B-4E5E-BECE-72DB1AB6ADFE} = {42829C21-AAC2-4247-8334-7BCE4FD40E69}
 		{58E08637-48EF-430C-BF1B-77C8F250D42E} = {A82D2E0E-8E06-469F-92AE-75B8680F23EB}
+		{11118824-922E-43E0-A307-D76E8AABE822} = {A82D2E0E-8E06-469F-92AE-75B8680F23EB}
 	EndGlobalSection
 EndGlobal
