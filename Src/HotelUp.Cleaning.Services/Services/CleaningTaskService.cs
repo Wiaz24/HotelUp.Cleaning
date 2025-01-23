@@ -37,7 +37,7 @@ public class CleaningTaskService : ICleaningTaskService
         return await _cleaningTaskRepository.GetByCleanerIdAsync(cleanerId);
     }
 
-    public async Task<Guid> CreateOnDemandAsync(Guid reservationId, DateTime realisationDate, int roomNumber)
+    public async Task<Guid> CreateOnDemandAsync(Guid reservationId, DateOnly realisationDate, int roomNumber)
     {
         var reservation = await _reservationRepository.GetByIdAsync(reservationId);
         if (reservation is null)
@@ -45,7 +45,8 @@ public class CleaningTaskService : ICleaningTaskService
             throw new ReservationNotFoundException(reservationId);
         }
         
-        if (realisationDate < reservation.StartDate || realisationDate > reservation.EndDate)
+        if (realisationDate < DateOnly.FromDateTime(reservation.StartDate) 
+            || realisationDate >  DateOnly.FromDateTime(reservation.EndDate))
         {
             throw new InvalidRealisationDateException(reservation.StartDate, reservation.EndDate);
         }
@@ -60,7 +61,7 @@ public class CleaningTaskService : ICleaningTaskService
         {
             Id = Guid.NewGuid(),
             Reservation = reservation,
-            RealisationDate = realisationDate,
+            RealisationDate = realisationDate.ToDateTime(new TimeOnly(12,0)),
             RoomNumber = roomNumber,
             Status = TaskStatus.Pending,
             CleaningType = CleaningType.OnDemand,
