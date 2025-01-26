@@ -13,12 +13,10 @@ namespace HotelUp.Cleaning.Tests.Integration.Controllers;
 [Collection(nameof(CleaningTaskControllerTests))]
 public class CleaningTaskControllerTests : IntegrationTestsBase
 {
-    private readonly ITestOutputHelper _testOutputHelper;
     private const string Prefix = "api/cleaning/cleaning-task";
     public CleaningTaskControllerTests(TestWebAppFactory factory, ITestOutputHelper testOutputHelper) 
-        : base(factory)
+        : base(factory, testOutputHelper)
     {
-        _testOutputHelper = testOutputHelper;
     }
     
     private HttpClient CreateHttpClientWithToken(Guid clientId)
@@ -81,7 +79,7 @@ public class CleaningTaskControllerTests : IntegrationTestsBase
         // Act
         var response = await httpClient.PostAsJsonAsync($"{Prefix}", dto);
         var content = await response.Content.ReadAsStringAsync();
-        _testOutputHelper.WriteLine(content);
+        TestOutputHelper.WriteLine(content);
         
         // Assert
         response.EnsureSuccessStatusCode();
