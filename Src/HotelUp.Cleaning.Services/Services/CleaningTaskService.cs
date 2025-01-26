@@ -1,6 +1,7 @@
 ﻿using HotelUp.Cleaning.Persistence.Const;
 using HotelUp.Cleaning.Persistence.Entities;
 using HotelUp.Cleaning.Persistence.Repositories;
+using HotelUp.Cleaning.Services.DTOs;
 using HotelUp.Cleaning.Services.Events;
 using HotelUp.Cleaning.Services.Events.External.DTOs;
 using HotelUp.Cleaning.Services.Services.Exceptions;
@@ -27,14 +28,16 @@ public class CleaningTaskService : ICleaningTaskService
         _bus = bus;
     }
 
-    public async Task<CleaningTask?> GetTaskByIdAsync(Guid id)
+    public async Task<CleaningTaskDto?> GetTaskByIdAsync(Guid id)
     {
-        return await _cleaningTaskRepository.GetByIdAsync(id);
+        var cleaningTask = await _cleaningTaskRepository.GetByIdAsync(id);
+        return cleaningTask is null ? null : CleaningTaskDto.FromEntity(cleaningTask);
     }
 
-    public async Task<IEnumerable<CleaningTask>> GetTasksByCleanerIdAsync(Guid cleanerId)
+    public async Task<IEnumerable<CleaningTaskDto>> GetTasksByCleanerIdAsync(Guid cleanerId)
     {
-        return await _cleaningTaskRepository.GetByCleanerIdAsync(cleanerId);
+        var cleaningTasks = await _cleaningTaskRepository.GetByCleanerIdAsync(cleanerId);
+        return cleaningTasks.Select(CleaningTaskDto.FromEntity);
     }
 
     public async Task<Guid> CreateOnDemandAsync(Guid reservationId, DateOnly realisationDate, int roomNumber)
@@ -65,7 +68,7 @@ public class CleaningTaskService : ICleaningTaskService
             RoomNumber = roomNumber,
             Status = TaskStatus.Pending,
             CleaningType = CleaningType.OnDemand,
-            Cleaner = cleaner
+            CleanerId = cleaner.Id
         };
         
         await _cleaningTaskRepository.AddAsync(task);
@@ -85,13 +88,9 @@ public class CleaningTaskService : ICleaningTaskService
         {
             throw new CleaningTaskNotFoundException(cleaningTaskId);
         }
-        if (cleaningTask.Cleaner is null)
+        if (cleaningTask.CleanerId != cleanerId)
         {
-            throw new CleanerNotAssignedToTaskException(cleaningTaskId);
-        }
-        if (cleaningTask.Cleaner.Id != cleanerId)
-        {
-            throw new TokenException($"Cleaner with id {cleanerId} is not assigned to this task");
+            throw new CleanerNotAssignedToTaskException(cleaningTaskId, cleanerId);
         }
         cleaningTask.Status = status;
         await _cleaningTaskRepository.UpdateAsync(cleaningTask);
@@ -158,7 +157,7 @@ public class CleaningTaskService : ICleaningTaskService
                 .OrderBy(x => x.TaskCount)
                 .First();
             cleaner.TaskCount++;
-            task.Cleaner = cleaner.Cleaner;
+            task.CleanerId = cleaner.Cleaner.Id;
         }
         return cleaningTasks;
     }
@@ -184,7 +183,7 @@ public class CleaningTaskService : ICleaningTaskService
                 RoomNumber = roomNumber,
                 Status = TaskStatus.Pending,
                 CleaningType = CleaningType.Cyclic,
-                Cleaner = defaultCleaner
+                CleanerId = defaultCleaner.Id
             };
             cleaningTasks.Add(task);
         }
@@ -199,7 +198,7 @@ public class CleaningTaskService : ICleaningTaskService
                 RoomNumber = roomNumber,
                 Status = TaskStatus.Pending,
                 CleaningType = CleaningType.Cyclic,
-                Cleaner = defaultCleaner
+                CleanerId = defaultCleaner.Id
             });
         }
         return Task.FromResult(cleaningTasks);
@@ -225,7 +224,7 @@ public class CleaningTaskService : ICleaningTaskService
                 RoomNumber = roomNumber,
                 Status = TaskStatus.Pending,
                 CleaningType = CleaningType.Cyclic,
-                Cleaner = defaultCleaner
+                CleanerId = defaultCleaner.Id
             },
             new CleaningTask
             {
@@ -235,7 +234,7 @@ public class CleaningTaskService : ICleaningTaskService
                 RoomNumber = roomNumber,
                 Status = TaskStatus.Pending,
                 CleaningType = CleaningType.Cyclic,
-                Cleaner = defaultCleaner
+                CleanerId = defaultCleaner.Id
             }
         };
         return Task.FromResult(cleaningTasks);
@@ -262,7 +261,7 @@ public class CleaningTaskService : ICleaningTaskService
                 RoomNumber = roomNumber,
                 Status = TaskStatus.Pending,
                 CleaningType = CleaningType.Cyclic,
-                Cleaner = defaultCleaner
+                CleanerId = defaultCleaner.Id
             };
             cleaningTasks.Add(task);
         }

@@ -13,5 +13,5 @@ public class CleaningTask
     public int RoomNumber { get; init; }
     public TaskStatus Status { get; set; } = TaskStatus.Pending;
     public CleaningType CleaningType { get; init; }
-    public required Cleaner Cleaner { get; set; }
+    public required Guid CleanerId { get; set; }
 }
