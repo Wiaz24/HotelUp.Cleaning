@@ -25,7 +25,6 @@ public class CleaningTaskRepository : ICleaningTaskRepository
             return cachedResult;
         }
         var result = await _dbContext.CleaningTasks
-            .Include(x => x.Cleaner)
             .FirstOrDefaultAsync(x => x.Id == id);
         _memoryCache.Set(cacheKey, result, TimeSpan.FromMinutes(5));
         return result;
@@ -40,8 +39,7 @@ public class CleaningTaskRepository : ICleaningTaskRepository
             return cachedResult;
         }
         var result = await _dbContext.CleaningTasks
-            .Include(x => x.Cleaner)
-            .Where(x => x.Cleaner.Id == id)
+            .Where(x => x.CleanerId == id)
             .ToListAsync();
         _memoryCache.Set(cacheKey, result, TimeSpan.FromMinutes(5));
         return result;

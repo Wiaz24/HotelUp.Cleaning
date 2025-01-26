@@ -48,7 +48,7 @@ public class AssignTasksToCleanersTests
                 RealisationDate = BaseDate,
                 RoomNumber = 101,
                 CleaningType = CleaningType.Cyclic,
-                Cleaner = DefaultCleaner
+                CleanerId = DefaultCleaner.Id
             }
         };
 
@@ -57,7 +57,7 @@ public class AssignTasksToCleanersTests
 
         // Assert
         result.Count.ShouldBe(1);
-        result.First().Cleaner.ShouldBe(cleaner);
+        result.First().CleanerId.ShouldBe(cleaner.Id);
         result.First().Status.ShouldBe(TaskStatus.Pending);
     }
 
@@ -100,7 +100,7 @@ public class AssignTasksToCleanersTests
                 RealisationDate = BaseDate,
                 RoomNumber = 101,
                 CleaningType = CleaningType.Cyclic,
-                Cleaner = DefaultCleaner
+                CleanerId = DefaultCleaner.Id
             },
             new()
             {
@@ -109,7 +109,7 @@ public class AssignTasksToCleanersTests
                 RealisationDate = BaseDate,
                 RoomNumber = 102,
                 CleaningType = CleaningType.Cyclic,
-                Cleaner = DefaultCleaner
+                CleanerId = DefaultCleaner.Id
             }
         };
 
@@ -118,8 +118,8 @@ public class AssignTasksToCleanersTests
 
         // Assert
         result.Count.ShouldBe(2);
-        result[0].Cleaner.ShouldBe(cleaner1);
-        result[1].Cleaner.ShouldBe(cleaner2);
+        result[0].CleanerId.ShouldBe(cleaner1.Id);
+        result[1].CleanerId.ShouldBe(cleaner2.Id);
         result.ShouldAllBe(task => task.Status == TaskStatus.Pending);
     }
 
@@ -162,7 +162,7 @@ public class AssignTasksToCleanersTests
                 RealisationDate = BaseDate,
                 RoomNumber = 101,
                 CleaningType = CleaningType.OnDemand,
-                Cleaner = DefaultCleaner
+                CleanerId = DefaultCleaner.Id
             }
         };
 
@@ -170,7 +170,7 @@ public class AssignTasksToCleanersTests
         var result = CleaningTaskService.AssignTasksToCleaners(tasks, cleanersWithCount);
 
         // Assert
-        result.First().Cleaner.ShouldBe(cleaner2);
+        result.First().CleanerId.ShouldBe(cleaner2.Id);
     }
 
     [Fact]
@@ -194,7 +194,7 @@ public class AssignTasksToCleanersTests
                 RealisationDate = BaseDate,
                 RoomNumber = 101,
                 CleaningType = CleaningType.OnDemand,
-                Cleaner = DefaultCleaner
+                CleanerId = DefaultCleaner.Id
             }
         };
 

@@ -13,6 +13,10 @@ internal sealed class DbContextConfiguration
     {
         builder.HasKey(x => x.Id);
         
+        builder.HasMany(x => x.CleaningTasks)
+            .WithOne()
+            .HasForeignKey(x => x.CleanerId);
+        
         builder.ToTable($"{nameof(Cleaner)}s");
     }
 
@@ -38,9 +42,6 @@ internal sealed class DbContextConfiguration
         
         builder.Property(x => x.CleaningType)
             .IsRequired();
-
-        builder.HasOne(x => x.Cleaner)
-            .WithMany(c => c.CleaningTasks);
         
         builder.ToTable($"{nameof(CleaningTask)}s");
     }

@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using HotelUp.Cleaning.API.DTOs;
 using HotelUp.Cleaning.Persistence.Entities;
+using HotelUp.Cleaning.Services.DTOs;
 using HotelUp.Cleaning.Services.Services;
 using HotelUp.Cleaning.Shared.Auth;
 using HotelUp.Cleaning.Shared.Exceptions;
@@ -29,7 +30,7 @@ public class CleaningTaskController : ControllerBase
     [SwaggerOperation("Get task by id")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<CleaningTask>> GetById([FromRoute] Guid id)
+    public async Task<ActionResult<CleaningTaskDto>> GetById([FromRoute] Guid id)
     {
         var result = await _cleaningTaskService.GetTaskByIdAsync(id);
         if (result is null)
@@ -44,7 +45,7 @@ public class CleaningTaskController : ControllerBase
     [SwaggerOperation("Get all cleaning tasks for logged in cleaner")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<IEnumerable<CleaningTask>>> GetAll()
+    public async Task<ActionResult<IEnumerable<CleaningTaskDto>>> GetAll()
     {
         var result = await _cleaningTaskService.GetTasksByCleanerIdAsync(LoggedInUserId);
         return Ok(result);
