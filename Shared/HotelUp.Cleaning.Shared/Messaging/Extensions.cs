@@ -16,7 +16,10 @@ internal static class Extensions
         services.AddMassTransit(busConfigurator =>
         {
             busConfigurator.SetKebabCaseEndpointNameFormatter();
-            busConfigurator.AddConsumers(assembliesWithConsumers);
+            if (assembliesWithConsumers.Length > 0)
+            {
+                busConfigurator.AddConsumers(assembliesWithConsumers);
+            }
             busConfigurator.UsingRabbitMq((context, rabbitMqConfigurator) =>
             {
                 rabbitMqConfigurator.MessageTopology.SetEntityNameFormatter(new CustomNameFormatter());

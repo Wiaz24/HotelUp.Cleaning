@@ -6,6 +6,11 @@ public class CustomNameFormatter : IEntityNameFormatter
 {
     public string FormatEntityName<T>()
     {
-        return $"HotelUp.Customer:{typeof(T).Name}";
+        var namespaceParts = typeof(T).Namespace?.Split('.');
+        if (namespaceParts == null)
+        {
+            return typeof(T).Name;
+        }
+        return $"{namespaceParts[0]}.{namespaceParts[1]}:{typeof(T).Name}";
     }
 }
