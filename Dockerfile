@@ -24,6 +24,6 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl --silent --fail http://localhost:5004/api/_health || exit 1
+    CMD curl --silent --fail http://localhost:5004/api/cleaning/_health || exit 1
 
 ENTRYPOINT ["dotnet", "HotelUp.Cleaning.API.dll"]
