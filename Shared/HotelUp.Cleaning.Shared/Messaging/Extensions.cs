@@ -15,7 +15,7 @@ internal static class Extensions
         services.AddRabbitMq();
         services.AddMassTransit(busConfigurator =>
         {
-            busConfigurator.SetKebabCaseEndpointNameFormatter();
+            busConfigurator.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter(prefix: "cleaning"));
             if (assembliesWithConsumers.Length > 0)
             {
                 busConfigurator.AddConsumers(assembliesWithConsumers);
